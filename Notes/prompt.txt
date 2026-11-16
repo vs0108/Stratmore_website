@@ -1,0 +1,103 @@
+1. Keep the logo structure, the dimensions and other things as the original form. Add it in the home page instead of just the header. 
+2. Instead of all the contents in the home page, add the logo so it can look prominent and add the links (Schedule a Confidential Dialogue and 
+Explore Advisory Pillars) - Change the UI structure accordingly. In order to fill in the spaces, you can add the hub details (Presence: Bangalore • Mumbai • Delhi • Kolkata • Pune • Hyderabad • Dubai) in the home page and remove it in footer.
+3. Instead of creating a sub section under leadership for the team, add it below the leadership boxes as team. And Change the name of that section to "Meet Our Team"
+4. Instead of FAQ ( Remove the section) Stick on to the below details under the "I. Investment Management" and "II. Estate & Succession" respectively. And add some good images pertaining to these headings.
+
+Family Succession Planning through Stratmore
+Protection of Wealth and family Succession Planning through Stratmore
+
+STRATMORE - Estate Planning Services
+Here we ask some key questions by Differentiating the thought of “Need to have” rather than “Nice to have”
+Do I need a Will? What should it include?
+Should a Will be registered?
+Who needs a private family Trust and how does it help?
+Which profession/ business makes it nearly mandatory for a family Trust to be created?
+My son or daughter resides outside of India. Should they be included as beneficiaries in a family Trust? If so, what should I keep in mind?
+We own a large family business. Do we require a 'Family Constitution' for better governance?
+
+Portfolio creation through Stratmore
+
+STRATMORE - Investment Management
+Some Key Questions
+
+What should be an Asset Allocation?
+Which are the Key principles on which a portfolio is created?
+how to monitor a portfolio? What are the red flags?
+How to Compare a portfolio with the top quartile return
+Which is the most important factor to consider while creating a portfolio?
+
+5. Instead of the section heading as "Leadership," keep it as "Meet Out Team," and inside give some other heading inside for the team. 
+
+6. In the Leadership page, inside the leaders box, there is a small box that has this "20+ Yrs Capital Markets" for Vikram and "5,000+ Wills & 3,000+ Trusts" for Dilip. So remove the two small boxes, as those details are already present in their contents. 
+7. In the team section, instead of "All Hubs (14)," put it as "All presence" or any other words that would suit it. (No need of "hubs")
+
+8. In the header, instead of "STRATMORE WEALTH®," add the logo that I provide.
+
+9. On the home page, instead of the logo that you have added, add the same type as on the home page of the Stratmore website (https://stratmore.in), including the same "yours truly" animation. Make the UI changes accordingly.  
+
+10. In the home page the logo is not exactly as I gave, it has the previous background in the words and the font is also not proper and in the header the logo is not proper (Fit the logo properly). Add the proper logo, if not exactly as in the website atleast make the logos look prominent. Ut should have the R (registered symbol)
+
+11. In the home page, the presense box - It is repeated twice. Make that UI change.
+
+12. In the footer, Instead of "STRATMORE WEALTH® Yours truly" , add the stratmore logo image ( the registered logo)
+
+13. Remove the word "advisory" or "advisors." 
+In Home page
+"Explore Advisory Pillars" to "Explore our Services"
+"Our Advisory Presence" to "Our Presence"
+
+In footer 
+"Advisory Pillars" to "Core Frameworks"
+
+In Services section
+"Advisory Pillars" to " Core Frameworks"
+
+In team stratmore
+"Our Advisory Professionals" to "Our Professionals"
+
+14. Change the logo to what I provide you. Remove the "yours truly" animation ( in home page) and add it seperately. In the footer, keep the yous truly below the logo.  Create a good home page without making it look clumsy.
+
+15. Remove the highlight for Dubai in presence box in home page. 
+
+16. Make the logos at the header (Increase the size of the header so that the entire logo fits as a small square like the page that I have provided below)  and footer into a square.  
+
+17. I will provide the images of the team with their names. Add it into their respective boxes.
+
+18. Reduce the footer height a bit and increase the font a bit. Also at the footer add these details: "AMFI Registered Mutual Fund Distributor (ARN-171431)" and "Initial Registration: 01-04-2020 • Validity through 31-05-2029," and remove it from the service section below—"Portfolio creation through Stratmore"— 
+(AMFI Registered Mutual Fund Distributor (ARN-171431) • Initial Registration: 01-04-2020 • Validity through 31-05-2029. 
+
+Also add this below document in the footer.
+
+19. The images of the newly added team members are not visible—take a look at this. 
+
+- Remove Prashanth Kolkata from the teams list. 
+
+- Also remove "New York • London • India" and "Wills, Private Trusts & Wealth Management" from the "Founding partners - Vikram and Dilip."
+
+- Remove the entire below-mentioned part from the footer and arrange the other parts. 
+Quick Navigation
+
+Home
+
+Core Frameworks
+
+Founding Partners
+
+Team Stratmore
+
+20. Issue with the logo—I was trying to add the logo. In the prompt I attached the image too and asked it to take the image as it is (omit "yours truly"). But it takes the logo design, etc., but it modifies the letters (the shape, the edges...).
+
+Solution—[10:16 pm, 15/11/2026] Dhruv Sathya: Open your exported index.html and search for aria-label='Stratmore Wealth Home'. That takes you to the clickable logo in the navigation bar.
+
+Inside that link, replace the entire <div class='stratmore-spotlight-card ...'> thing </div> with the code below. Keep the surroundings, <a> and </a> so the logo still links home.
+
+<img
+  src="https://stratmore.in/wp-content/uploads/2025/09/stratamore-logo-1024x1024.jpg"
+  alt="Stratmore Wealth"
+  width="84"
+  height="84"
+  class="block h-[68px] w-[68 px] rounded-sm object-contain sm:h-[84px] sm:w-[84px]"
+- You can pull the logo from the old website directly into the new one; maybe this will work to fix the logo issue.
+
+Can this solution solve the issue? If so, go ahead 

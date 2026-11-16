@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Stratmore Wealth® | Private Wealth Management, Estate &amp; Succession Planning</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Pinyon+Script&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          screens: { xs: '375px' },
+          colors: {
+            coolbg: { 50: '#F9FBFC', 100: '#F4F7F9', 200: '#E5ECF0', 300: '#CBD7DF' },
+            deepnavy: { 950: '#061621', 900: '#0A2233', 800: '#10324A', 700: '#184563' },
+            accent: { 50: '#F0FDFA', 100: '#CCFBF1', 400: '#2DD4BF', 500: '#14B8A6', 600: '#0D9488', 700: '#0F766E' }
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+            script: ['Great Vibes', 'Pinyon Script', 'cursive']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom Styles -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F4F7F9;
+      color: #0A2233;
+      overflow-x: hidden;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+    main { flex: 1 0 auto; width: 100%; }
+    footer { flex-shrink: 0; width: 100%; }
+    h1, h2, h3, .font-editorial { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .font-signature { font-family: 'Great Vibes', 'Pinyon Script', cursive; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: linear-gradient(90deg, #14B8A6, #2DD4BF);
+      width: 0%; z-index: 100; transition: width 0.25s ease-out;
+    }
+    #page-transition-curtain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 90;
+      background: radial-gradient(circle at center, rgba(20, 184, 166, 0.14), rgba(10, 34, 51, 0.32));
+      opacity: 0; transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #page-transition-curtain.active { opacity: 1; }
+    
+    #nav-indicator {
+      position: absolute; bottom: 4px; left: 0; height: calc(100% - 8px);
+      background: rgba(20, 184, 166, 0.18); border: 1px solid rgba(45, 212, 191, 0.45);
+      border-radius: 9999px; transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), width 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+      pointer-events: none; z-index: 0;
+    }
+    .nav-item-link { position: relative; z-index: 10; transition: color 0.3s ease, transform 0.25s ease; cursor: pointer; }
+    .nav-item-link.active { color: #FFFFFF !important; font-weight: 600; }
+    .nav-item-link.active .nav-dot { transform: scale(1); opacity: 1; }
+    .nav-dot {
+      width: 5px; height: 5px; border-radius: 9999px; background-color: #2DD4BF;
+      display: inline-block; margin-right: 5px; transform: scale(0); opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+    }
+    .nav-dropdown { opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1); }
+    .nav-dropdown-wrapper:hover .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+    
+    .page-section { display: none; opacity: 0; transform: translateY(18px); transition: opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1), transform 0.48s cubic-bezier(0.16, 1, 0.3, 1); }
+    .page-section.active-page { display: block; opacity: 1; transform: translateY(0); }
+    
+    .team-card-enter { opacity: 0; transform: translateY(22px) scale(0.97); animation: teamCardStagger 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes teamCardStagger { to { opacity: 1; transform: translateY(0) scale(1); } }
+    
+    .reveal-item, .reveal-left, .reveal-right {
+      opacity: 0; transition: opacity 0.68s cubic-bezier(0.16, 1, 0.3, 1), transform 0.68s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-item { transform: translateY(32px) scale(0.985); }
+    .reveal-left { transform: translateX(-36px); }
+    .reveal-right { transform: translateX(36px); }
+    .reveal-item.is-visible, .reveal-left.is-visible, .reveal-right.is-visible { opacity: 1; transform: translate(0, 0) scale(1); }
+    
+    .delay-100 { transition-delay: 90ms; }
+    .delay-200 { transition-delay: 180ms; }
+    .delay-300 { transition-delay: 270ms; }
+    
+    .tab-content-anim { animation: tabFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes tabFadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .cool-hero-pattern {
+      background-color: #F4F7F9;
+      background-image: radial-gradient(circle at 85% 15%, rgba(13, 148, 136, 0.09) 0%, transparent 45%),
+                        radial-gradient(circle at 10% 80%, rgba(16, 50, 74, 0.05) 0%, transparent 50%),
+                        linear-gradient(to right, rgba(10, 34, 51, 0.035) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(10, 34, 51, 0.035) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 56px 56px, 56px 56px;
+    }
+    .stratmore-spotlight-card {
+      background-color: #030307;
+      background-image: radial-gradient(ellipse 38% 82% at 52% 48%, rgba(154, 152, 198, 0.56) 0%, rgba(76, 74, 118, 0.38) 42%, rgba(18, 17, 34, 0.90) 76%, #030307 100%),
+                        linear-gradient(108deg, #020205 22%, #2B2A48 42%, #7674A2 51%, #272540 62%, #020205 82%);
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-accent-600 selection:text-white">
+
+  <!-- Scroll Progress & Transition Curtain -->
+  <div id="scroll-progress"></div>
+  <div id="page-transition-curtain"></div>
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-deepnavy-950 text-coolbg-300 text-[11px] sm:text-xs border-b border-white/10 py-2 px-3 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="inline-flex items-center gap-1.5 text-accent-400 font-medium truncate">
+          <span class="w-2 h-2 rounded-full bg-accent-400 animate-pulse shrink-0"></span>
+          <span class="truncate">AMFI Registered Mutual Fund Distributor | ARN-171431</span>
+        </span>
+      </div>
+      <div class="flex items-center gap-4 sm:gap-6 ml-auto shrink-0">
+        <a href="mailto:service@stratmore.in" class="hover:text-accent-400 transition-colors flex items-center gap-1.5">
+          <i data-lucide="mail" class="w-3.5 h-3.5 text-accent-400 shrink-0"></i>
+          <span class="hidden xs:inline">service@stratmore.in</span>
+        </a>
+        <a href="https://play.google.com/store/search?q=stratmore&amp;c=apps" target="_blank" rel="noopener" class="hover:text-accent-400 transition-colors flex items-center gap-1.5 font-medium text-white">
+          <i data-lucide="smartphone" class="w-3.5 h-3.5 text-accent-400 shrink-0"></i>
+          <span>Stratmore App</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header id="navbar" class="sticky top-0 z-40 bg-deepnavy-900/95 backdrop-blur-md border-b border-white/10 shadow-lg shadow-deepnavy-950/15 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-24 sm:h-28 flex items-center justify-between gap-3">
+      
+      <!-- Brand Logo -->
+      <a href="#home" onclick="navigateWithTransition(event, 0)" class="flex items-center group focus:outline-none shrink-0" aria-label="Stratmore Wealth Home">
+        <div class="stratmore-spotlight-card aspect-square w-[68px] h-[68px] sm:w-[84px] sm:h-[84px] rounded-sm border border-white/20 shadow-lg flex items-center justify-center overflow-hidden p-1.5">
+          <svg class="w-full h-full block" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="hdrSqSilver" x1="0" y1="96" x2="0" y2="128" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FFFFFF"/>
+                <stop offset="52%" stop-color="#E2E4EE"/>
+                <stop offset="100%" stop-color="#969AAE"/>
+              </linearGradient>
+              <filter id="hdrSqShadow" x="-12%" y="-12%" width="130%" height="145%">
+                <feDropShadow dx="-2" dy="3" stdDeviation="1.6" flood-color="#000000" flood-opacity="0.95"/>
+              </filter>
+            </defs>
+            <g transform="translate(206, 12)">
+              <circle cx="10" cy="10" r="8.5" stroke="#FFFFFF" stroke-width="1.8" fill="none"/>
+              <text x="10" y="13.8" text-anchor="middle" fill="#FFFFFF" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700">R</text>
+            </g>
+            <g filter="url(#hdrSqShadow)" stroke="url(#hdrSqSilver)" stroke-width="3.3" stroke-linecap="square" stroke-linejoin="bevel" fill="none">
+              <path d="M30 102 H18 C15.2 102 13.5 103.6 13.5 106.5 C13.5 109.4 15.2 111 18 111 H27 C29.8 111 31.5 112.8 31.5 116.2 C31.5 119.6 29.8 122 27 122 H13.5" />
+              <path d="M39 102 H56 M47.5 102 V122" />
+              <path d="M64 102 H74.5 C78 102 80 104 80 107.2 C80 110.4 78 112.5 74.5 112.5 H64 V122" />
+              <path d="M73 112.5 L80.5 122" />
+              <path d="M87.5 122 L95.5 102 H97.5 L105.5 122" />
+              <path d="M112 102 H129 M120.5 102 V122" />
+              <path d="M136 122 V102 H138 L145.5 115 L153 102 H155 V122" />
+              <circle cx="172" cy="112" r="10" />
+              <path d="M190 102 H200.5 C204 102 206 104 206 107.2 C206 110.4 204 112.5 200.5 112.5 H190 V122" />
+              <path d="M199 112.5 L206.5 122" />
+              <path d="M213 102 H226.5 M213 112 H226.5 M213 122 H226.5" />
+            </g>
+            <text x="226.5" y="140" text-anchor="end" fill="#E4E6F0" font-family="Plus Jakarta Sans, sans-serif" font-size="8.6" font-weight="600" letter-spacing="6.5">WEALTH</text>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav id="desktop-nav" class="hidden lg:flex items-center relative bg-deepnavy-950/60 px-2.5 py-1.5 rounded-full border border-white/10">
+        <span id="nav-indicator"></span>
+        <a href="#home" data-section="home" onclick="navigateWithTransition(event, 0)" class="nav-item-link active px-5 py-1.5 text-[11px] uppercase tracking-wider font-medium text-coolbg-200 hover:text-white flex items-center">
+          <span class="nav-dot"></span>Home
+        </a>
+        <a href="#services" data-section="services" onclick="navigateWithTransition(event, 1)" class="nav-item-link px-5 py-1.5 text-[11px] uppercase tracking-wider font-medium text-coolbg-200 hover:text-white flex items-center">
+          <span class="nav-dot"></span>Services
+        </a>
+        <div class="relative nav-dropdown-wrapper">
+          <a href="#leadership" data-section="leadership" onclick="navigateWithTransition(event, 2)" class="nav-item-link px-5 py-1.5 text-[11px] uppercase tracking-wider font-medium text-coolbg-200 hover:text-white flex items-center gap-1">
+            <span class="nav-dot"></span>
+            <span>Meet Our Team</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-accent-400 transition-transform duration-200"></i>
+          </a>
+          <div class="nav-dropdown absolute left-1/2 -translate-x-1/2 top-full pt-3 w-56 z-50">
+            <div class="bg-deepnavy-950 border border-accent-500/40 rounded-md shadow-2xl p-2 text-left">
+              <a href="#leadership" onclick="navigateWithTransition(event, 2)" class="flex items-center justify-between px-3.5 py-2.5 rounded hover:bg-deepnavy-800 text-xs font-medium text-coolbg-100 hover:text-accent-400 transition-colors">
+                <span>Founding Partners</span>
+                <i data-lucide="award" class="w-3.5 h-3.5 text-accent-400"></i>
+              </a>
+              <a href="#meet-our-team" onclick="navigateToTeam(event)" class="flex items-center justify-between px-3.5 py-2.5 rounded bg-accent-600/15 hover:bg-accent-600/30 border border-accent-500/30 text-xs font-semibold text-accent-400 transition-colors mt-1">
+                <span>Team Stratmore</span>
+                <i data-lucide="users" class="w-3.5 h-3.5 text-accent-400"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="openModal()" class="hidden sm:flex bg-accent-600 hover:bg-accent-500 text-white font-semibold text-[11px] sm:text-xs uppercase tracking-widest px-4 sm:px-5 py-2.5 sm:py-3 rounded transition-all shadow-md shadow-accent-600/25 items-center gap-1.5">
+          <span>Consultation</span>
+          <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+        </button>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden text-white p-2.5 rounded-md bg-deepnavy-800/80 hover:bg-deepnavy-700 border border-white/10 focus:outline-none flex items-center gap-1.5 text-xs uppercase tracking-wider font-semibold" aria-label="Toggle Menu">
+          <span class="hidden md:inline text-coolbg-200 text-[11px] pl-1">Menu</span>
+          <i data-lucide="menu" class="w-5 h-5 text-accent-400"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-deepnavy-950 border-t border-white/10 px-4 sm:px-6 py-5 space-y-1.5 shadow-2xl max-h-[82vh] overflow-y-auto">
+      <a href="#home" onclick="toggleMobileMenu(); navigateWithTransition(event, 0);" class="mobile-nav-link flex items-center justify-between text-coolbg-100 hover:text-accent-400 py-3 px-3 rounded hover:bg-white/5 text-sm font-medium border-b border-white/5">
+        <span>Home</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-coolbg-300/50"></i>
+      </a>
+      <a href="#services" onclick="toggleMobileMenu(); navigateWithTransition(event, 1);" class="mobile-nav-link flex items-center justify-between text-coolbg-100 hover:text-accent-400 py-3 px-3 rounded hover:bg-white/5 text-sm font-medium border-b border-white/5">
+        <span>Services (Core Frameworks)</span>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-coolbg-300/50"></i>
+      </a>
+      <div class="border-b border-white/5 pb-2">
+        <a href="#leadership" onclick="toggleMobileMenu(); navigateWithTransition(event, 2);" class="mobile-nav-link flex items-center justify-between text-coolbg-100 hover:text-accent-400 py-3 px-3 rounded hover:bg-white/5 text-sm font-medium">
+          <span>Meet Our Team (Founding Partners)</span>
+          <i data-lucide="award" class="w-4 h-4 text-accent-400"></i>
+        </a>
+        <a href="#meet-our-team" onclick="toggleMobileMenu(); navigateToTeam(event);" class="mobile-nav-link flex items-center justify-between text-accent-400 bg-accent-600/10 hover:bg-accent-600/20 border border-accent-500/30 py-2.5 px-4 ml-3 rounded text-xs uppercase tracking-wider font-semibold mt-1">
+          <span>↳ Team Stratmore (13)</span>
+          <i data-lucide="users" class="w-4 h-4"></i>
+        </a>
+      </div>
+      <div class="pt-3 sm:hidden">
+        <button onclick="toggleMobileMenu(); openModal();" class="w-full bg-accent-600 hover:bg-accent-500 text-white font-semibold text-xs uppercase tracking-widest py-3.5 rounded text-center shadow-lg">Schedule Private Consultation</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main id="main-view-container">
+
+    <!-- Section 0: Home / Hero -->
+    <section id="home" class="page-section active-page cool-hero-pattern relative overflow-hidden py-10 sm:py-16 md:py-20 border-b border-coolbg-200">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center text-center">
+        
+        <div class="reveal-item is-visible w-full max-w-3xl stratmore-spotlight-card rounded-md shadow-2xl border border-deepnavy-700/80 px-6 sm:px-12 py-12 sm:py-16 md:py-20 relative overflow-hidden select-none">
+          <div class="flex justify-end mb-2 sm:mb-3">
+            <span class="w-7 h-7 sm:w-9 sm:h-9 rounded-full border-2 border-white text-white text-xs sm:text-base font-bold flex items-center justify-center leading-none shadow-md">R</span>
+          </div>
+          <svg class="w-full h-auto mx-auto block" viewBox="0 0 920 205" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="heroSilverGrad" x1="0" y1="20" x2="0" y2="120" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FFFFFF"/>
+                <stop offset="50%" stop-color="#E2E4EE"/>
+                <stop offset="100%" stop-color="#969AAE"/>
+              </linearGradient>
+              <filter id="heroDeepShadow" x="-10%" y="-10%" width="130%" height="160%">
+                <feDropShadow dx="-6" dy="11" stdDeviation="4" flood-color="#000000" flood-opacity="0.95"/>
+              </filter>
+            </defs>
+            <g filter="url(#heroDeepShadow)" stroke="url(#heroSilverGrad)" stroke-width="12.5" stroke-linecap="square" stroke-linejoin="bevel" fill="none">
+              <path d="M92 32 H46 C34 32 28 38 28 47 C28 56 34 62 46 62 H76 C88 62 95 68 95 79 C95 90 88 96 76 96 H26" />
+              <path d="M132 32 H198 M165 32 V96" />
+              <path d="M236 32 H276 C289 32 298 39.5 298 49 C298 58.5 289 66 276 66 H236 V96" />
+              <path d="M269 66 L300 96" />
+              <path d="M338 96 L369 32 H375 L406 96" />
+              <path d="M438 32 H504 M471 32 V96" />
+              <path d="M542 96 V32 H548 L580 76 L612 32 H618 V96" />
+              <circle cx="694" cy="64" r="33" />
+              <path d="M768 32 H808 C821 32 830 39.5 830 49 C830 58.5 821 66 808 66 H768 V96" />
+              <path d="M801 66 L832 96" />
+              <path d="M862 32 H912 M862 64 H912 M862 96 H912" />
+            </g>
+            <text x="914" y="162" text-anchor="end" fill="#E4E6F0" font-family="Plus Jakarta Sans, sans-serif" font-size="27" font-weight="600" letter-spacing="32">WEALTH</text>
+          </svg>
+        </div>
+
+        <div class="reveal-item delay-100 is-visible mt-7 sm:mt-9 flex items-center justify-center gap-4 w-full max-w-md">
+          <span class="h-px flex-1 bg-deepnavy-900/20"></span>
+          <span class="font-signature text-4xl sm:text-5xl text-deepnavy-900 leading-none px-2 select-none">Yours truly</span>
+          <span class="h-px flex-1 bg-deepnavy-900/20"></span>
+        </div>
+
+        <div class="reveal-item delay-100 is-visible mt-7 sm:mt-9 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 w-full max-w-xl">
+          <button onclick="openModal()" class="flex-1 bg-accent-600 hover:bg-accent-700 text-white font-semibold text-xs sm:text-sm uppercase tracking-widest px-7 py-4 rounded transition-all flex items-center justify-center gap-2.5 shadow-lg shadow-accent-600/20">
+            <span>Schedule a Confidential Dialogue</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 shrink-0"></i>
+          </button>
+          <a href="#services" onclick="navigateWithTransition(event, 1)" class="flex-1 bg-deepnavy-900 hover:bg-deepnavy-800 text-white text-xs sm:text-sm uppercase tracking-widest font-semibold px-7 py-4 rounded transition-all flex items-center justify-center gap-2 shadow-md">
+            <span>Explore Our Services</span>
+            <i data-lucide="layers" class="w-4 h-4 text-accent-400 shrink-0"></i>
+          </a>
+        </div>
+
+        <div class="reveal-item delay-200 is-visible mt-10 sm:mt-12 w-full max-w-4xl bg-white/95 backdrop-blur-sm border border-coolbg-200 rounded-md p-6 sm:p-8 shadow-sm">
+          <div class="flex items-center justify-center gap-2 mb-5">
+            <i data-lucide="map-pin" class="w-4 h-4 text-accent-600"></i>
+            <span class="text-xs uppercase tracking-[0.22em] text-accent-700 font-bold">Our Presence</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+            <span class="px-4 py-2.5 rounded bg-coolbg-100 border border-coolbg-200 text-xs sm:text-sm font-semibold text-deepnavy-900">Bangalore</span>
+            <span class="px-4 py-2.5 rounded bg-coolbg-100 border border-coolbg-200 text-xs sm:text-sm font-semibold text-deepnavy-900">Mumbai</span>
+            <span class="px-4 py-2.5 rounded bg-coolbg-100 border border-coolbg-200 text-xs sm:text-sm font-semibold text-deepnavy-900">Delhi</span>
+            <span class="px-4 py-2.5 rounded bg-coolbg-100 border border-coolbg-200 text-xs sm:text-sm font-semibold text-deepnavy-900">Kolkata</span>
+            <span class="px-4 py-2.5 rounded bg-coolbg-100 border border-coolbg-200 text-xs sm:text-sm font-semibold text-deepnavy-900">Pune</span>
+            <span class="px-4 py-2.5 rounded bg-coolbg-100 border border-coolbg-200 text-xs sm:text-sm font-semibold text-deepnavy-900">Hyderabad</span>
+            <span class="px-4 py-2.5 rounded bg-coolbg-100 border border-coolbg-200 text-xs sm:text-sm font-semibold text-deepnavy-900">Dubai</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 1: Services / Core Frameworks -->
+    <section id="services" class="page-section py-10 sm:py-16 md:py-20 lg:py-28 bg-white border-b border-coolbg-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 sm:mb-14 gap-5 reveal-item">
+          <div>
+            <span class="text-xs uppercase tracking-[0.2em] text-accent-700 font-bold block mb-2">01 • Core Frameworks</span>
+            <h2 class="text-3xl sm:text-5xl font-editorial font-semibold text-deepnavy-900">Our Core Services</h2>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 bg-coolbg-100 p-1.5 border border-coolbg-200 rounded w-full lg:w-auto gap-1">
+            <button id="tab-btn-investment" onclick="switchServiceTab(1)" class="px-4 sm:px-5 py-3 text-xs uppercase tracking-widest font-semibold bg-deepnavy-900 text-white rounded transition-all shadow-sm text-center">I. Investment Management</button>
+            <button id="tab-btn-estate" onclick="switchServiceTab(2)" class="px-4 sm:px-5 py-3 text-xs uppercase tracking-widest font-semibold text-deepnavy-800 hover:text-accent-700 rounded transition-all text-center">II. Estate &amp; Succession</button>
+          </div>
+        </div>
+
+        <!-- Investment Management Tab Content -->
+        <div id="tab-panel-investment" class="tab-content-anim grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
+          <div class="lg:col-span-5 bg-deepnavy-900 text-white rounded-md shadow-xl overflow-hidden border border-deepnavy-700">
+            <div class="relative h-52 sm:h-60 w-full overflow-hidden bg-deepnavy-950">
+              <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Portfolio creation through Stratmore" class="w-full h-full object-cover opacity-85 hover:scale-105 transition-transform duration-700" onerror="this.src='https://stratmore.in/wp-content/uploads/2025/10/Investment-Management.png'" />
+              <div class="absolute inset-0 bg-gradient-to-t from-deepnavy-900 via-deepnavy-900/30 to-transparent"></div>
+              <span class="absolute bottom-3 left-6 bg-accent-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Pillar I • Investment Management</span>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="text-xs uppercase tracking-widest text-accent-400 font-semibold">STRATMORE—Investment Management</p>
+              <h3 class="text-2xl sm:text-3xl font-editorial font-semibold mt-1.5 mb-6">Portfolio creation through Stratmore</h3>
+              <button onclick="openModal()" class="w-full bg-accent-600 hover:bg-accent-500 text-white font-semibold text-xs uppercase tracking-widest py-3.5 rounded transition-all shadow-md">Schedule a Portfolio Consultation</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7 space-y-5">
+            <div class="border-b border-coolbg-200 pb-3 flex items-center justify-between">
+              <div>
+                <span class="text-xs uppercase tracking-[0.2em] text-accent-700 font-bold block">STRATMORE—Investment Management</span>
+                <h4 class="text-2xl sm:text-3xl font-editorial font-semibold text-deepnavy-900 mt-0.5">Some Key Questions</h4>
+              </div>
+              <i data-lucide="trending-up" class="w-7 h-7 text-accent-600 shrink-0"></i>
+            </div>
+            <div class="grid grid-cols-1 gap-3.5">
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">01</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">What should be an asset allocation?</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">02</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">Which are the key principles on which a portfolio is created?</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">03</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">How to monitor a portfolio? What are the red flags?</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">04</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">How to compare a portfolio with the top quartile return</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">05</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">Which is the most important factor to consider while creating a portfolio?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estate & Succession Tab Content -->
+        <div id="tab-panel-estate" class="hidden tab-content-anim grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
+          <div class="lg:col-span-5 bg-deepnavy-900 text-white rounded-md shadow-xl overflow-hidden border border-deepnavy-700">
+            <div class="relative h-52 sm:h-60 w-full overflow-hidden bg-deepnavy-950">
+              <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Family Succession Planning through Stratmore" class="w-full h-full object-cover opacity-85 hover:scale-105 transition-transform duration-700" />
+              <div class="absolute inset-0 bg-gradient-to-t from-deepnavy-900 via-deepnavy-900/30 to-transparent"></div>
+              <span class="absolute bottom-3 left-6 bg-accent-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">Pillar II • Estate &amp; Succession</span>
+            </div>
+            <div class="p-6 sm:p-8">
+              <p class="text-xs uppercase tracking-widest text-accent-400 font-semibold">STRATMORE—Estate Planning Services</p>
+              <h3 class="text-2xl sm:text-3xl font-editorial font-semibold mt-1.5 mb-2">Family Succession Planning through Stratmore</h3>
+              <p class="text-coolbg-100 text-sm font-medium mb-4">Protection of Wealth and Family Succession Planning through Stratmore</p>
+              <div class="p-4 bg-deepnavy-950/90 border-l-4 border-accent-500 rounded mb-6">
+                <p class="text-xs sm:text-sm text-coolbg-200 italic leading-relaxed">Here we ask some key questions by differentiating the thought of “Need to have” rather than “Nice to have.”</p>
+              </div>
+              <button onclick="openModal()" class="w-full bg-accent-600 hover:bg-accent-500 text-white font-semibold text-xs uppercase tracking-widest py-3.5 rounded transition-all shadow-md">Consult Our Estate Planning Desk</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7 space-y-5">
+            <div class="border-b border-coolbg-200 pb-3 flex items-center justify-between">
+              <div>
+                <span class="text-xs uppercase tracking-[0.2em] text-accent-700 font-bold block">STRATMORE—Estate Planning Services</span>
+                <h4 class="text-2xl sm:text-3xl font-editorial font-semibold text-deepnavy-900 mt-0.5">Key Questions: “Need to have” vs. “Nice to have”</h4>
+              </div>
+              <i data-lucide="shield-check" class="w-7 h-7 text-accent-600 shrink-0"></i>
+            </div>
+            <div class="grid grid-cols-1 gap-3.5">
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">01</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">Do I need a will? What should it include?</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">02</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">Should a will be registered?</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">03</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">Who needs a private family? Trust and how does it help?</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">04</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">Which profession/business makes it nearly mandatory for a family trust to be created?</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">05</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">My son or daughter resides outside of India. Should they be included as beneficiaries in a family trust? If so, what should I keep in mind?</p>
+              </div>
+              <div class="p-5 bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 transition-all shadow-sm flex items-start gap-4">
+                <span class="w-8 h-8 rounded-full bg-deepnavy-900 text-accent-400 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">06</span>
+                <p class="text-deepnavy-900 font-semibold text-sm sm:text-base leading-snug">We own a large family business. Do we require a 'family constitution' for better governance?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-coolbg-200 flex flex-wrap justify-between items-center gap-4 text-xs font-semibold uppercase tracking-widest">
+          <a href="#home" onclick="navigateWithTransition(event, 0)" class="text-deepnavy-700 hover:text-accent-600 py-1">← Back to Home</a>
+          <a href="#leadership" onclick="navigateWithTransition(event, 2)" class="text-accent-700 hover:text-deepnavy-900 py-1">Meet Our Team →</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 2: Meet Our Team & Leadership -->
+    <section id="leadership" class="page-section py-10 sm:py-16 md:py-20 lg:py-28 bg-white border-b border-coolbg-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-5 reveal-item">
+          <div class="max-w-2xl">
+            <span class="text-xs uppercase tracking-[0.2em] text-accent-700 font-bold block mb-2">02 • Meet Our Team</span>
+            <h2 class="text-3xl sm:text-5xl font-editorial font-semibold text-deepnavy-900 leading-tight">Founding Partners</h2>
+          </div>
+          <span class="hidden sm:inline font-signature text-4xl text-deepnavy-900">Yours truly</span>
+        </div>
+
+        <!-- Founders Cards Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
+          
+          <!-- Vikram Sengupta -->
+          <div class="reveal-left bg-coolbg-50 border border-coolbg-200 rounded-md p-6 sm:p-8 md:p-10 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-4 border-b border-coolbg-200 pb-6 mb-6">
+                <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-deepnavy-900 border-2 border-accent-500 overflow-hidden flex items-center justify-center text-white font-editorial text-2xl font-bold shrink-0 shadow-md">
+                  <img id="founder-img-Vikram" src="https://stratmore.in/wp-content/uploads/2025/10/Vikram.png" data-name="Vikram" data-step="1" alt="Vikram Sengupta" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />
+                  <span class="absolute inset-0 flex items-center justify-center text-accent-400">VS</span>
+                </div>
+                <div>
+                  <h3 class="text-2xl sm:text-3xl font-editorial font-semibold text-deepnavy-900">Vikram Sengupta</h3>
+                  <p class="text-xs uppercase tracking-widest text-accent-700 font-bold mt-1">CEO &amp; Co-Founder – Stratmore Wealth</p>
+                </div>
+              </div>
+              <p class="text-deepnavy-800/90 text-sm sm:text-base leading-relaxed mb-6">Vikram Sengupta has been associated with the Indian capital market for the last 20 years, having worked in global investment banks like <strong>Lehman Brothers</strong> &amp; <strong>Nomura International Plc</strong> in New York and London. His role was to advise Foreign Institutional Investors (FIIs) who were investing in Indian markets.</p>
+              <div class="p-4 bg-white rounded border border-coolbg-200 mb-6">
+                <div class="flex items-start gap-3 text-xs sm:text-sm text-deepnavy-900">
+                  <i data-lucide="graduation-cap" class="w-4 h-4 text-accent-600 shrink-0 mt-0.5"></i>
+                  <span><strong>Educational Qualifications:</strong> Master’s in Economics and an MBA from <strong>IIM Calcutta</strong>.</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-coolbg-200 flex items-center justify-end text-xs text-deepnavy-700">
+              <button onclick="openModal()" class="text-accent-700 font-bold hover:text-deepnavy-900 shrink-0">Request Intro →</button>
+            </div>
+          </div>
+
+          <!-- Dilip Balakrishnan -->
+          <div class="reveal-right bg-coolbg-50 border border-coolbg-200 rounded-md p-6 sm:p-8 md:p-10 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-4 border-b border-coolbg-200 pb-6 mb-6">
+                <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-deepnavy-900 border-2 border-accent-500 overflow-hidden flex items-center justify-center text-white font-editorial text-2xl font-bold shrink-0 shadow-md">
+                  <img id="founder-img-Dilip" src="https://stratmore.in/wp-content/uploads/2025/10/Dilip.png" data-name="Dilip" data-step="1" alt="Dilip Balakrishnan" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />
+                  <span class="absolute inset-0 flex items-center justify-center text-accent-400">DB</span>
+                </div>
+                <div>
+                  <h3 class="text-2xl sm:text-3xl font-editorial font-semibold text-deepnavy-900">Dilip Balakrishnan</h3>
+                  <p class="text-xs uppercase tracking-widest text-accent-700 font-bold mt-1">Co-Founder &amp; Director – Stratmore Wealth</p>
+                </div>
+              </div>
+              <p class="text-deepnavy-800/90 text-sm sm:text-base leading-relaxed mb-6">Dilip Balakrishnan is a pioneer in estate planning services (Wills &amp; Private Trust) with more than 20 years of experience in the wealth management industry. He has worked in MNC banks like <strong>Deutsche Bank</strong>, <strong>HSBC</strong>, <strong>Standard Chartered Bank</strong>, and <strong>EFG</strong>, and was instrumental in drafting more than 5,000 Wills and over 3,000 Private Trusts for HNI families.</p>
+              <div class="p-4 bg-white rounded border border-coolbg-200 mb-6">
+                <div class="flex items-start gap-3 text-xs sm:text-sm text-deepnavy-900">
+                  <i data-lucide="scale" class="w-4 h-4 text-accent-600 shrink-0 mt-0.5"></i>
+                  <span><strong>Qualifications:</strong> Company Secretary &amp; Graduate in Law.</span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-coolbg-200 flex items-center justify-end text-xs text-deepnavy-700">
+              <button onclick="openModal()" class="text-accent-700 font-bold hover:text-deepnavy-900 shrink-0">Request Intro →</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Team Stratmore Grid with City Filters -->
+        <div id="meet-our-team" class="mt-16 pt-14 border-t-2 border-coolbg-200 scroll-mt-32">
+          <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-8 sm:mb-10 gap-5 reveal-item">
+            <div>
+              <span class="text-xs uppercase tracking-[0.2em] text-accent-700 font-bold block mb-2">Our Professionals</span>
+              <h3 class="text-3xl sm:text-5xl font-editorial font-semibold text-deepnavy-900">Team Stratmore</h3>
+              <p class="text-deepnavy-800/80 text-sm sm:text-base mt-2 max-w-2xl">Dedicated professionals with a shared vision to empower investors through thoughtful counsel, transparency, and a focus on enduring value.</p>
+            </div>
+            <div class="flex overflow-x-auto no-scrollbar sm:flex-wrap gap-1.5 bg-coolbg-100 p-1.5 rounded border border-coolbg-200 w-full lg:w-auto" id="team-city-filters">
+              <button onclick="filterTeamByCity(0)" class="team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded bg-deepnavy-900 text-white transition-all">All Presence (13)</button>
+              <button onclick="filterTeamByCity(1)" class="team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded text-deepnavy-800 hover:text-accent-700 transition-all">Bangalore (7)</button>
+              <button onclick="filterTeamByCity(2)" class="team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded text-deepnavy-800 hover:text-accent-700 transition-all">Mumbai (2)</button>
+              <button onclick="filterTeamByCity(3)" class="team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded text-deepnavy-800 hover:text-accent-700 transition-all">Kolkata (1)</button>
+              <button onclick="filterTeamByCity(4)" class="team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded text-deepnavy-800 hover:text-accent-700 transition-all">Delhi (1)</button>
+              <button onclick="filterTeamByCity(5)" class="team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded text-deepnavy-800 hover:text-accent-700 transition-all">Hyderabad (1)</button>
+              <button onclick="filterTeamByCity(6)" class="team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded text-deepnavy-800 hover:text-accent-700 transition-all">Dubai (1)</button>
+            </div>
+          </div>
+          
+          <div id="team-members-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6"></div>
+        </div>
+
+        <div class="mt-10 sm:mt-14 pt-6 sm:pt-8 border-t border-coolbg-200 flex flex-wrap justify-between items-center gap-4 text-xs font-semibold uppercase tracking-widest">
+          <a href="#services" onclick="navigateWithTransition(event, 1)" class="text-deepnavy-700 hover:text-accent-600 py-1">← Back to Services</a>
+          <a href="#home" onclick="navigateWithTransition(event, 0)" class="text-accent-700 hover:text-deepnavy-900 py-1">Return to Home →</a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-deepnavy-950 text-coolbg-300 border-t border-white/10 pt-8 sm:pt-10 pb-8 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 pb-6 sm:pb-8 border-b border-white/10 items-start">
+        
+        <div class="md:col-span-7 flex flex-col sm:flex-row items-start gap-5">
+          <div class="shrink-0">
+            <div class="stratmore-spotlight-card aspect-square w-28 h-28 sm:w-32 sm:h-32 rounded-sm border border-white/20 shadow-xl flex items-center justify-center overflow-hidden p-2">
+              <svg class="w-full h-full block" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="ftrSqSilver" x1="0" y1="96" x2="0" y2="128" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#FFFFFF"/>
+                    <stop offset="52%" stop-color="#E2E4EE"/>
+                    <stop offset="100%" stop-color="#969AAE"/>
+                  </linearGradient>
+                  <filter id="ftrSqShadow" x="-12%" y="-12%" width="130%" height="145%">
+                    <feDropShadow dx="-2" dy="4" stdDeviation="1.8" flood-color="#000000" flood-opacity="0.95"/>
+                  </filter>
+                </defs>
+                <g transform="translate(206, 12)">
+                  <circle cx="10" cy="10" r="8.5" stroke="#FFFFFF" stroke-width="1.8" fill="none"/>
+                  <text x="10" y="13.8" text-anchor="middle" fill="#FFFFFF" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700">R</text>
+                </g>
+                <g filter="url(#ftrSqShadow)" stroke="url(#ftrSqSilver)" stroke-width="3.3" stroke-linecap="square" stroke-linejoin="bevel" fill="none">
+                  <path d="M30 102 H18 C15.2 102 13.5 103.6 13.5 106.5 C13.5 109.4 15.2 111 18 111 H27 C29.8 111 31.5 112.8 31.5 116.2 C31.5 119.6 29.8 122 27 122 H13.5" />
+                  <path d="M39 102 H56 M47.5 102 V122" />
+                  <path d="M64 102 H74.5 C78 102 80 104 80 107.2 C80 110.4 78 112.5 74.5 112.5 H64 V122" />
+                  <path d="M73 112.5 L80.5 122" />
+                  <path d="M87.5 122 L95.5 102 H97.5 L105.5 122" />
+                  <path d="M112 102 H129 M120.5 102 V122" />
+                  <path d="M136 122 V102 H138 L145.5 115 L153 102 H155 V122" />
+                  <circle cx="172" cy="112" r="10" />
+                  <path d="M190 102 H200.5 C204 102 206 104 206 107.2 C206 110.4 204 112.5 200.5 112.5 H190 V122" />
+                  <path d="M199 112.5 L206.5 122" />
+                  <path d="M213 102 H226.5 M213 112 H226.5 M213 122 H226.5" />
+                </g>
+                <text x="226.5" y="140" text-anchor="end" fill="#E4E6F0" font-family="Plus Jakarta Sans, sans-serif" font-size="8.6" font-weight="600" letter-spacing="6.5">WEALTH</text>
+              </svg>
+            </div>
+            <div class="font-signature text-2xl sm:text-3xl text-accent-400 mt-1.5 pl-0.5 leading-none">Yours truly</div>
+          </div>
+          <div class="space-y-1.5">
+            <p class="text-white font-semibold text-base leading-snug">Stratmore Wealth Private Limited</p>
+            <p class="text-coolbg-300 text-xs sm:text-sm leading-snug">Registered with Registrar of Companies, ROC Bangalore.</p>
+            <p class="text-coolbg-300/75 font-mono text-xs">CIN: U74140KA2020PTC133637</p>
+            <p class="text-accent-400 font-semibold text-xs sm:text-sm pt-1">AMFI Registered Mutual Fund Distributor (ARN-171431)</p>
+            <p class="text-coolbg-300 text-xs sm:text-sm">Initial Registration: 01-04-2020 • Validity through 31-05-2029</p>
+            <p class="pt-1.5">
+              <button onclick="openComplaintModal()" class="inline-flex items-center gap-1.5 text-accent-400 hover:text-accent-300 font-semibold underline underline-offset-4 transition-colors text-xs sm:text-sm text-left">
+                <i data-lucide="file-text" class="w-4 h-4 shrink-0"></i>
+                <span>Complaint Redressal Mechanism</span>
+              </button>
+            </p>
+          </div>
+        </div>
+
+        <div class="md:col-span-5 space-y-3">
+          <div class="p-3.5 rounded bg-deepnavy-900 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div>
+              <p class="text-white font-semibold uppercase tracking-widest text-xs flex items-center gap-1.5">
+                <i data-lucide="smartphone" class="w-4 h-4 text-accent-400"></i> Stratmore® Mobile App
+              </p>
+              <p class="text-xs text-coolbg-300 mt-0.5">Track SIPs, Folios, Risk Profiling &amp; Active XIRR.</p>
+            </div>
+            <a href="https://play.google.com/store/search?q=stratmore&amp;c=apps" target="_blank" rel="noopener" class="shrink-0 bg-accent-600 hover:bg-accent-500 text-white font-semibold text-xs uppercase tracking-wider px-3.5 py-2 rounded transition-colors text-center">Google Play →</a>
+          </div>
+          <div class="space-y-1">
+            <p class="text-white font-semibold uppercase tracking-widest text-xs flex items-center gap-1.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-accent-400"></i> Registered Corporate Office
+            </p>
+            <p class="text-coolbg-300 text-xs sm:text-sm leading-relaxed">91 Springboard Business Hub, GK Complex, No. 45/3, M.G. Road, Richmond Town, Bangalore – 560025, Karnataka, India.</p>
+          </div>
+        </div>
+
+      </div>
+      
+      <div class="pt-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs sm:text-sm text-coolbg-300/75">
+        <p>Mutual Fund investments are subject to market risks, read all scheme related documents carefully.</p>
+        <p class="shrink-0">© 2026 Stratmore Wealth Private Limited. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Complaint Redressal Modal -->
+  <div id="complaint-modal" class="fixed inset-0 z-50 hidden bg-deepnavy-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white max-w-2xl w-full max-h-[92vh] overflow-y-auto rounded-md shadow-2xl border border-coolbg-200">
+      <div class="bg-deepnavy-900 px-5 sm:px-6 py-4 flex items-center justify-between text-white sticky top-0 z-10">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="shield-check" class="w-5 h-5 text-accent-400"></i>
+          <h3 class="text-lg sm:text-xl font-editorial font-semibold">Complaint Redressal Mechanism</h3>
+        </div>
+        <button onclick="closeComplaintModal()" class="text-coolbg-300 hover:text-white p-1.5" aria-label="Close Document">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-6 sm:p-10 text-deepnavy-900 space-y-5 text-sm leading-relaxed bg-white">
+        <div class="flex items-start justify-between gap-4 border-b border-coolbg-200 pb-5">
+          <div>
+            <span class="text-[11px] uppercase tracking-[0.2em] text-accent-700 font-bold block mb-1">Official Investor Governance Document</span>
+            <h4 class="text-2xl sm:text-3xl font-editorial font-bold text-deepnavy-900">Complaint Redressal Mechanism</h4>
+          </div>
+          <div class="shrink-0 text-left">
+            <div class="stratmore-spotlight-card aspect-square w-14 h-14 rounded-sm border border-coolbg-300 flex items-center justify-center p-1">
+              <svg class="w-full h-full block" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(206, 12)">
+                  <circle cx="10" cy="10" r="8.5" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+                  <text x="10" y="13.8" text-anchor="middle" fill="#FFFFFF" font-family="Plus Jakarta Sans, sans-serif" font-size="10.5" font-weight="700">R</text>
+                </g>
+                <g stroke="#E4E6F0" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="bevel" fill="none">
+                  <path d="M30 102 H18 C15.2 102 13.5 103.6 13.5 106.5 C13.5 109.4 15.2 111 18 111 H27 C29.8 111 31.5 112.8 31.5 116.2 C31.5 119.6 29.8 122 27 122 H13.5" />
+                  <path d="M39 102 H56 M47.5 102 V122" />
+                  <path d="M64 102 H74.5 C78 102 80 104 80 107.2 C80 110.4 78 112.5 74.5 112.5 H64 V122" />
+                  <path d="M73 112.5 L80.5 122" />
+                  <path d="M87.5 122 L95.5 102 H97.5 L105.5 122" />
+                  <path d="M112 102 H129 M120.5 102 V122" />
+                  <path d="M136 122 V102 H138 L145.5 115 L153 102 H155 V122" />
+                  <circle cx="172" cy="112" r="10" />
+                  <path d="M190 102 H200.5 C204 102 206 104 206 107.2 C206 110.4 204 112.5 200.5 112.5 H190 V122" />
+                  <path d="M199 112.5 L206.5 122" />
+                  <path d="M213 102 H226.5 M213 112 H226.5 M213 122 H226.5" />
+                </g>
+                <text x="226.5" y="140" text-anchor="end" fill="#E4E6F0" font-family="Plus Jakarta Sans, sans-serif" font-size="8.6" font-weight="600" letter-spacing="6.5">WEALTH</text>
+              </svg>
+            </div>
+            <span class="font-signature text-lg text-deepnavy-900 block leading-none mt-1">Yours truly</span>
+          </div>
+        </div>
+
+        <p>At Stratmore Wealth Private Ltd, we are committed to ensuring seamless and transparent mutual fund distribution service. Whenever there are any concerns or service issues regarding investments, we have put in place a clear, structured redressal mechanism to ensure queries are resolved promptly.</p>
+        
+        <p class="font-semibold text-deepnavy-900 pt-1">Steps for Our Complaint Redressal Mechanism:</p>
+        
+        <div class="space-y-4">
+          <div class="p-4 bg-coolbg-50 border border-coolbg-200 rounded">
+            <p class="font-bold text-deepnavy-900 mb-2">Step 1: Contact Our Support Team:</p>
+            <p class="mb-2">Register complaint or query through any of the following channels:</p>
+            <ul class="space-y-1.5 pl-4 text-deepnavy-800">
+              <li><strong>Email:</strong> <a href="mailto:service@stratmore.in" class="text-accent-700 underline">service@stratmore.in</a></li>
+              <li><strong>Phone:</strong> <a href="tel:9739458887" class="text-accent-700 underline">9739458887</a></li>
+              <li><strong>Office Address:</strong> 91 Springboard Business Hub, GK Complex, No.45/3, M.G. Road, Richmond Town, Bangalore, Bangalore North, Karnataka, India, 560025.</li>
+            </ul>
+            <p class="mt-3 text-xs sm:text-sm text-deepnavy-700 italic">Please mention your registered name, contact number, and the relevant mutual fund folio number/application details to help us investigate quickly.</p>
+          </div>
+          <div class="p-4 bg-coolbg-50 border border-coolbg-200 rounded">
+            <p class="font-bold text-deepnavy-900 mb-1">Step 2: Acknowledgment &amp; Resolution Timelines</p>
+            <p>Upon receipt of a complaint, we acknowledge it promptly and initiate an investigation. We aim to acknowledge the receipt of the complaint within <strong>2 working days</strong>.</p>
+          </div>
+          <div class="p-4 bg-coolbg-50 border border-coolbg-200 rounded">
+            <p class="font-bold text-deepnavy-900 mb-1">Step 3: Resolution:</p>
+            <p>The team will investigate and resolve all complaints or grievances within <strong>10 working days</strong> with regular status updates until the matter is closed.</p>
+          </div>
+          <div class="p-4 bg-coolbg-50 border border-coolbg-200 rounded">
+            <p class="font-bold text-deepnavy-900 mb-1">Step 4: Transparency and Compliance:</p>
+            <p>We adhere strictly to SEBI's guidelines on complaint redressal and maintain detailed records of all complaints received, and actions taken.</p>
+          </div>
+        </div>
+
+        <div class="pt-5 border-t border-coolbg-200 text-center text-xs text-deepnavy-700 space-y-1.5">
+          <p><em>Registered Office- 91 Springboard Business Hub, GK Complex, No.45/3, M.G. Road, Richmond Town, Bangalore, Bangalore North, Karnataka, India, 560025.</em></p>
+          <p class="font-semibold text-deepnavy-900">AMFI Registered Mutual Fund Distributor (ARN-171431) • Initial Registration: 01-04-2020 • Validity through 31-05-2029</p>
+        </div>
+        
+        <div class="pt-2 text-right">
+          <button onclick="closeComplaintModal()" class="px-6 py-2.5 bg-deepnavy-900 hover:bg-deepnavy-800 text-white text-xs uppercase tracking-widest font-semibold rounded transition-colors">Close Document</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Consultation Modal -->
+  <div id="consultation-modal" class="fixed inset-0 z-50 hidden bg-deepnavy-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white max-w-lg w-full max-h-[92vh] overflow-y-auto rounded-md shadow-2xl border border-coolbg-200">
+      <div class="bg-deepnavy-900 px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between text-white sticky top-0 z-10">
+        <div>
+          <span class="text-[10px] uppercase tracking-[0.2em] text-accent-400 block font-semibold">Strictly Confidential</span>
+          <h3 class="text-xl sm:text-2xl font-editorial font-semibold">Schedule a Private Consultation</h3>
+        </div>
+        <button onclick="closeModal()" class="text-coolbg-300 hover:text-white p-1.5"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="consultation-form" onsubmit="submitConsultation(event)" class="p-5 sm:p-8 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-deepnavy-900 mb-1">Full Name *</label>
+          <input type="text" required placeholder="Your Name" class="w-full px-3.5 py-2.5 text-sm border border-coolbg-300 rounded focus:border-accent-600 focus:outline-none" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-deepnavy-900 mb-1">Email *</label>
+            <input type="email" required placeholder="name@domain.com" class="w-full px-3.5 py-2.5 text-sm border border-coolbg-300 rounded focus:border-accent-600 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-deepnavy-900 mb-1">Mobile / WhatsApp *</label>
+            <input type="tel" required placeholder="+91 98XXX XXXXX" class="w-full px-3.5 py-2.5 text-sm border border-coolbg-300 rounded focus:border-accent-600 focus:outline-none" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-deepnavy-900 mb-1">Primary Location</label>
+            <select class="w-full px-3.5 py-2.5 text-sm border border-coolbg-300 rounded bg-white focus:border-accent-600 focus:outline-none">
+              <option>Bangalore</option>
+              <option>Mumbai</option>
+              <option>Kolkata</option>
+              <option>Delhi NCR</option>
+              <option>Hyderabad</option>
+              <option>Pune</option>
+              <option>Dubai / International</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-deepnavy-900 mb-1">Service Mandate</label>
+            <select id="modal-mandate" class="w-full px-3.5 py-2.5 text-sm border border-coolbg-300 rounded bg-white focus:border-accent-600 focus:outline-none">
+              <option>Holistic Wealth &amp; Estate Review</option>
+              <option>Investment Management Review</option>
+              <option>Estate &amp; Trust Structuring</option>
+              <option>Cross-Border NRI Succession</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-accent-600 hover:bg-accent-700 text-white font-semibold text-xs uppercase tracking-widest py-4 rounded transition-all shadow-md">Submit Confidential Request</button>
+      </form>
+
+      <div id="modal-success" class="hidden p-8 text-center space-y-4">
+        <h4 class="text-2xl font-editorial font-semibold text-deepnavy-900">Thank You</h4>
+        <p class="text-xs text-deepnavy-700 leading-relaxed max-w-sm mx-auto">A Senior Partner at Stratmore Wealth will contact you shortly to arrange a confidential discussion.</p>
+        <div class="font-signature text-3xl text-accent-700">Yours truly</div>
+        <button onclick="closeModal()" class="mt-2 px-6 py-2.5 bg-deepnavy-900 text-white text-xs uppercase tracking-widest rounded">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    lucide.createIcons();
+
+    const sectionIds = ['home', 'services', 'leadership'];
+    
+    const resolvedPhotoMap = {
+      Vikram: 'https://stratmore.in/wp-content/uploads/2025/10/Vikram.png',
+      Dilip: 'https://stratmore.in/wp-content/uploads/2025/10/Dilip.png'
+    };
+
+    const teamMembers = [
+      { name: 'Sharanya', city: 'Bangalore', initials: 'SH', aliases: ['Sharanya', 'Saranya'] },
+      { name: 'Priyadarshini', city: 'Bangalore', initials: 'PR', aliases: ['Priyadarshini', 'Priyadharshini', 'Priya'] },
+      { name: 'Tarun', city: 'Bangalore', initials: 'TA', aliases: ['Tarun', 'Tharun'] },
+      { name: 'Sandhya', city: 'Bangalore', initials: 'SA', aliases: ['Sandhya', 'Sandya'] },
+      { name: 'Shankaran', city: 'Bangalore', initials: 'SK', aliases: ['Shankaran', 'Sankaran', 'Shankar'] },
+      { name: 'Rakshitha', city: 'Bangalore', initials: 'RA', preferLocal: true, aliases: ['Rakshitha', 'Rakshita'] },
+      { name: 'Rashmi', city: 'Bangalore', initials: 'RS', preferLocal: true, aliases: ['Rashmi'] },
+      { name: 'Shamim', city: 'Mumbai', initials: 'SM', aliases: ['Shamim', 'Shameem'] },
+      { name: 'Preshti', city: 'Mumbai', initials: 'PR', preferLocal: true, aliases: ['Preshti', 'Prishti'] },
+      { name: 'Komal', city: 'Kolkata', initials: 'KO', preferLocal: true, aliases: ['Komal'] },
+      { name: 'Chidanand', city: 'Delhi', initials: 'CH', aliases: ['Chidanand', 'Chidananda'] },
+      { name: 'Mohan', city: 'Hyderabad', initials: 'MO', preferLocal: true, aliases: ['Mohan'] },
+      { name: 'Pooja', city: 'Dubai', initials: 'PO', aliases: ['Pooja', 'Puja'] }
+    ];
+
+    const cityNames = ['All', 'Bangalore', 'Mumbai', 'Kolkata', 'Delhi', 'Hyderabad', 'Dubai'];
+    let currentTeamFilterIdx = 0;
+
+    function buildCandidateUrls(memberName) {
+      const memberObj = teamMembers.find(m => m.name === memberName);
+      if (memberObj && memberObj.noPhoto) return [];
+      if (resolvedPhotoMap[memberName]) {
+        return [resolvedPhotoMap[memberName]];
+      }
+      const namesToTry = memberObj && memberObj.aliases && memberObj.aliases.length > 0 ? memberObj.aliases : [memberName];
+      const exts = ['jpg', 'jpeg', 'png', 'webp', 'jfif', 'JPG', 'PNG', 'JPEG', 'WEBP'];
+      const urls = [];
+      namesToTry.forEach(n => {
+        const clean = n.trim();
+        const lower = clean.toLowerCase();
+        const upper = clean.toUpperCase();
+        exts.forEach(ext => {
+          urls.push(`${clean}.${ext}`);
+          urls.push(`${lower}.${ext}`);
+          urls.push(`${upper}.${ext}`);
+          urls.push(`images/${clean}.${ext}`);
+          urls.push(`images/${lower}.${ext}`);
+          urls.push(`assets/${clean}.${ext}`);
+          urls.push(`assets/${lower}.${ext}`);
+        });
+      });
+      const folders = ['2025/10', '2025/09', '2025/11', '2025/12', '2026/01', '2026/02', '2026/03', '2026/04', '2026/05', '2026/06', '2026/07', '2026/08', '2026/09', '2026/10', '2026/11'];
+      const wpExts = ['png', 'jpg', 'jpeg', 'webp'];
+      if (!memberObj || !memberObj.preferLocal) {
+        namesToTry.forEach(n => {
+          const clean = n.trim();
+          const lower = clean.toLowerCase();
+          folders.forEach(f => {
+            wpExts.forEach(ext => {
+              urls.push(`https://stratmore.in/wp-content/uploads/${f}/${clean}.${ext}`);
+              urls.push(`https://stratmore.in/wp-content/uploads/${f}/${lower}.${ext}`);
+              urls.push(`https://stratmore.in/wp-content/uploads/${f}/${clean}-1.${ext}`);
+            });
+          });
+        });
+      }
+      return urls;
+    }
+
+    function tryNextMemberPhoto(imgEl) {
+      const name = imgEl.getAttribute('data-name');
+      const memberObj = teamMembers.find(m => m.name === name);
+      if (memberObj && memberObj.noPhoto) {
+        imgEl.style.display = 'none';
+        return;
+      }
+      if (resolvedPhotoMap[name] && imgEl.src !== resolvedPhotoMap[name]) {
+        imgEl.src = resolvedPhotoMap[name];
+        imgEl.style.display = 'block';
+        return;
+      }
+      const candidates = buildCandidateUrls(name);
+      const step = parseInt(imgEl.getAttribute('data-step') || '0', 10);
+      if (step < candidates.length) {
+        imgEl.setAttribute('data-step', String(step + 1));
+        imgEl.src = candidates[step];
+      } else {
+        imgEl.style.display = 'none';
+      }
+    }
+
+    function applyDiscoveredPhotosToDom() {
+      Object.keys(resolvedPhotoMap).forEach(name => {
+        const memberObj = teamMembers.find(m => m.name === name);
+        if (memberObj && memberObj.noPhoto) return;
+        const url = resolvedPhotoMap[name];
+        const imgEls = document.querySelectorAll(`img[data-name='${name}']`);
+        imgEls.forEach(img => {
+          if (img.src !== url) {
+            img.src = url;
+            img.style.display = 'block';
+          }
+        });
+      });
+    }
+
+    function parseStratmoreHtmlForTeamPhotos(htmlStr) {
+      if (!htmlStr) return;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlStr, 'text/html');
+      const allTextEls = Array.from(doc.querySelectorAll('h1,h2,h3,h4,h5,h6,p,span,div,strong,b,figcaption'));
+      const allPeople = teamMembers.filter(m => !m.noPhoto && !m.preferLocal).concat([
+        { name: 'Vikram', aliases: ['Vikram Sengupta', 'Vikram'] },
+        { name: 'Dilip', aliases: ['Dilip Balakrishnan', 'Dilip'] }
+      ]);
+      allPeople.forEach(person => {
+        const aliases = person.aliases || [person.name];
+        for (let i = 0; i < aliases.length; i++) {
+          const target = aliases[i].toLowerCase();
+          const matchingNodes = allTextEls.filter(el => {
+            const t = (el.textContent || '').trim().toLowerCase();
+            return t === target || t.indexOf(target + ' ') === 0;
+          });
+          for (let m = 0; m < matchingNodes.length; m++) {
+            let curr = matchingNodes[m];
+            for (let depth = 0; depth < 6; depth++) {
+              if (!curr) break;
+              const imgs = Array.from(curr.querySelectorAll('img')).filter(im => {
+                const s = (im.getAttribute('data-src') || im.getAttribute('data-lazy-src') || im.getAttribute('src') || '').toLowerCase();
+                return s && s.indexOf('logo') === -1 && s.indexOf('icon') === -1 && s.indexOf('svg') === -1 && s.indexOf('data:image') === -1;
+              });
+              if (imgs.length === 1) {
+                let foundUrl = imgs[0].getAttribute('data-src') || imgs[0].getAttribute('data-lazy-src') || imgs[0].getAttribute('src');
+                if (foundUrl) {
+                  if (foundUrl.indexOf('http') !== 0) {
+                    foundUrl = 'https://stratmore.in' + (foundUrl.indexOf('/') === 0 ? '' : '/') + foundUrl;
+                  }
+                  resolvedPhotoMap[person.name] = foundUrl;
+                  break;
+                }
+              }
+              curr = curr.parentElement;
+            }
+            if (resolvedPhotoMap[person.name]) break;
+          }
+          if (resolvedPhotoMap[person.name]) break;
+        }
+      });
+      applyDiscoveredPhotosToDom();
+    }
+
+    function autoDiscoverStratmorePhotos() {
+      fetch('https://stratmore.in/wp-json/wp/v2/media?per_page=100')
+        .then(r => r.ok ? r.json() : [])
+        .then(mediaList => {
+          if (!Array.isArray(mediaList)) return;
+          const allPeople = teamMembers.filter(m => !m.noPhoto && !m.preferLocal).concat([
+            { name: 'Vikram', aliases: ['Vikram', 'Vikram Sengupta'] },
+            { name: 'Dilip', aliases: ['Dilip', 'Dilip Balakrishnan'] }
+          ]);
+          mediaList.forEach(item => {
+            const src = item && item.source_url ? item.source_url : '';
+            const slug = item && item.slug ? item.slug.toLowerCase() : '';
+            const title = item && item.title && item.title.rendered ? item.title.rendered.toLowerCase() : '';
+            if (!src || src.toLowerCase().indexOf('logo') !== -1) return;
+            allPeople.forEach(person => {
+              const aliases = person.aliases || [person.name];
+              aliases.forEach(al => {
+                const alLow = al.toLowerCase();
+                if (slug === alLow || title === alLow || slug.indexOf(alLow) === 0 || title.indexOf(alLow) === 0 || src.toLowerCase().indexOf('/' + alLow + '.') !== -1 || src.toLowerCase().indexOf('/' + alLow + '-') !== -1) {
+                  resolvedPhotoMap[person.name] = src;
+                }
+              });
+            });
+          });
+          applyDiscoveredPhotosToDom();
+        })
+        .catch(() => {});
+
+      fetch('https://stratmore.in/wp-json/wp/v2/pages?per_page=50')
+        .then(r => r.ok ? r.json() : [])
+        .then(pages => {
+          if (!Array.isArray(pages)) return;
+          pages.forEach(p => {
+            if (p && p.content && p.content.rendered) {
+              parseStratmoreHtmlForTeamPhotos(p.content.rendered);
+            }
+          });
+        })
+        .catch(() => {});
+    }
+
+    function renderTeamMembers(cityIndex = 0) {
+      currentTeamFilterIdx = cityIndex;
+      const selectedCity = cityNames[cityIndex];
+      const grid = document.getElementById('team-members-grid');
+      const filtered = selectedCity === 'All' ? teamMembers : teamMembers.filter(m => m.city === selectedCity);
+      
+      grid.innerHTML = filtered.map((m, i) => {
+        const candidates = buildCandidateUrls(m.name);
+        const firstUrl = resolvedPhotoMap[m.name] || (m.preferLocal && candidates.length > 0 ? candidates[0] : `https://stratmore.in/wp-content/uploads/2025/10/${m.name}.png`);
+        const startStep = (m.preferLocal && candidates.length > 0 && !resolvedPhotoMap[m.name]) ? '1' : '0';
+        const delayMs = i * 45;
+        const imgMarkup = m.noPhoto ? '' : `<img src="${firstUrl}" data-name="${m.name}" data-step="${startStep}" alt="${m.name} - ${m.city}" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />`;
+        
+        return `<div style="animation-delay: ${delayMs}ms" class="team-card-enter bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 p-5 sm:p-6 transition-all duration-300 shadow-sm hover:shadow-lg group flex items-center gap-4">
+          <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-deepnavy-900 border-2 border-accent-500/80 overflow-hidden flex items-center justify-center text-white font-editorial text-xl font-bold shrink-0 shadow">
+            ${imgMarkup}
+            <span class="absolute inset-0 flex items-center justify-center text-accent-400">${m.initials}</span>
+          </div>
+          <div>
+            <h4 class="text-2xl font-editorial font-semibold text-deepnavy-900 group-hover:text-accent-700 transition-colors">${m.name}</h4>
+            <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-bold text-accent-700 mt-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent-500"></span>${m.city}
+            </span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function filterTeamByCity(cityIndex) {
+      const btns = document.querySelectorAll('.team-filter-btn');
+      btns.forEach((btn, idx) => {
+        if (idx === cityIndex) {
+          btn.className = 'team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded bg-deepnavy-900 text-white transition-all';
+        } else {
+          btn.className = 'team-filter-btn shrink-0 px-3.5 py-2 text-[11px] uppercase tracking-wider font-semibold rounded text-deepnavy-800 hover:text-accent-700 transition-all';
+        }
+      });
+      renderTeamMembers(cityIndex);
+    }
+
+    function navigateToTeam(e) {
+      if (e) e.preventDefault();
+      const leadershipSec = document.getElementById('leadership');
+      const isAlreadyOnLeadership = leadershipSec.classList.contains('active-page');
+      if (!isAlreadyOnLeadership) {
+        navigateWithTransition(null, 2, true);
+      } else {
+        const teamEl = document.getElementById('meet-our-team');
+        if (teamEl) teamEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function switchServiceTab(tabNum) {
+      const invPanel = document.getElementById('tab-panel-investment');
+      const estPanel = document.getElementById('tab-panel-estate');
+      const invBtn = document.getElementById('tab-btn-investment');
+      const estBtn = document.getElementById('tab-btn-estate');
+      
+      if (tabNum === 1) {
+        invPanel.classList.remove('hidden');
+        estPanel.classList.add('hidden');
+        invBtn.className = 'px-4 sm:px-5 py-3 text-xs uppercase tracking-widest font-semibold bg-deepnavy-900 text-white rounded transition-all shadow-sm text-center';
+        estBtn.className = 'px-4 sm:px-5 py-3 text-xs uppercase tracking-widest font-semibold text-deepnavy-800 hover:text-accent-700 rounded transition-all text-center';
+      } else {
+        estPanel.classList.remove('hidden');
+        invPanel.classList.add('hidden');
+        estBtn.className = 'px-4 sm:px-5 py-3 text-xs uppercase tracking-widest font-semibold bg-deepnavy-900 text-white rounded transition-all shadow-sm text-center';
+        invBtn.className = 'px-4 sm:px-5 py-3 text-xs uppercase tracking-widest font-semibold text-deepnavy-800 hover:text-accent-700 rounded transition-all text-center';
+      }
+    }
+
+    function moveNavIndicator(activeLink) {
+      const indicator = document.getElementById('nav-indicator');
+      const nav = document.getElementById('desktop-nav');
+      if (!indicator || !activeLink || !nav) return;
+      const navRect = nav.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+      const offsetLeft = linkRect.left - navRect.left;
+      indicator.style.width = `${linkRect.width}px`;
+      indicator.style.transform = `translateX(${offsetLeft}px)`;
+    }
+
+    function setActiveSectionById(secId) {
+      const links = document.querySelectorAll('.nav-item-link');
+      links.forEach(link => {
+        if (link.getAttribute('data-section') === secId) {
+          link.classList.add('active');
+          moveNavIndicator(link);
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+
+    function triggerSectionReveal(secEl) {
+      const allReveals = document.querySelectorAll('.reveal-item, .reveal-left, .reveal-right');
+      allReveals.forEach(el => el.classList.remove('is-visible'));
+      setTimeout(() => {
+        const targetReveals = secEl.querySelectorAll('.reveal-item, .reveal-left, .reveal-right');
+        targetReveals.forEach(el => el.classList.add('is-visible'));
+      }, 60);
+    }
+
+    function navigateWithTransition(e, index, scrollToTeamAfter = false) {
+      if (e) e.preventDefault();
+      const targetId = sectionIds[index];
+      const targetEl = document.getElementById(targetId);
+      if (!targetEl) return;
+      const curtain = document.getElementById('page-transition-curtain');
+      const prog = document.getElementById('scroll-progress');
+      curtain.classList.add('active');
+      prog.style.width = `${((index + 1) / sectionIds.length) * 100}%`;
+      setActiveSectionById(targetId);
+      
+      setTimeout(() => {
+        document.querySelectorAll('.page-section').forEach(sec => {
+          sec.classList.remove('active-page');
+        });
+        targetEl.classList.add('active-page');
+        triggerSectionReveal(targetEl);
+        
+        if (scrollToTeamAfter) {
+          setTimeout(() => {
+            const teamEl = document.getElementById('meet-our-team');
+            if (teamEl) teamEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 160);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 180);
+
+      setTimeout(() => {
+        curtain.classList.remove('active');
+      }, 440);
+    }
+
+    function setupListeners() {
+      window.addEventListener('resize', () => {
+        const activeLink = document.querySelector('.nav-item-link.active');
+        if (activeLink) moveNavIndicator(activeLink);
+      });
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    function openComplaintModal() {
+      document.getElementById('complaint-modal').classList.remove('hidden');
+    }
+
+    function closeComplaintModal() {
+      document.getElementById('complaint-modal').classList.add('hidden');
+    }
+
+    function openModal() {
+      document.getElementById('consultation-form').classList.remove('hidden');
+      document.getElementById('modal-success').classList.add('hidden');
+      document.getElementById('consultation-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('consultation-modal').classList.add('hidden');
+    }
+
+    function submitConsultation(e) {
+      e.preventDefault();
+      document.getElementById('consultation-form').classList.add('hidden');
+      document.getElementById('modal-success').classList.remove('hidden');
+    }
+
+    // Initialize application scripts
+    renderTeamMembers(0);
+    autoDiscoverStratmorePhotos();
+    setupListeners();
+    
+    setTimeout(function(){
+      const firstActive = document.querySelector('.nav-item-link.active');
+      if (firstActive) moveNavIndicator(firstActive);
+      document.getElementById('scroll-progress').style.width = `${(1 / sectionIds.length) * 100}%`;
+    }, 50);
+  </script>
+</body>
+</html>

@@ -481,7 +481,7 @@
             <div>
               <div class="flex items-center gap-4 border-b border-coolbg-200 pb-6 mb-6">
                 <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-deepnavy-900 border-2 border-accent-500 overflow-hidden flex items-center justify-center text-white font-editorial text-2xl font-bold shrink-0 shadow-md">
-                  <img id="founder-img-Vikram" src="https://stratmore.in/wp-content/uploads/2025/10/Vikram.png" data-name="Vikram" data-step="1" alt="Vikram Sengupta" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />
+                  <img id="founder-img-Vikram" src="team_images/Vikram.png" data-name="Vikram" alt="Vikram Sengupta" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />
                   <span class="absolute inset-0 flex items-center justify-center text-accent-400">VS</span>
                 </div>
                 <div>
@@ -507,7 +507,7 @@
             <div>
               <div class="flex items-center gap-4 border-b border-coolbg-200 pb-6 mb-6">
                 <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-deepnavy-900 border-2 border-accent-500 overflow-hidden flex items-center justify-center text-white font-editorial text-2xl font-bold shrink-0 shadow-md">
-                  <img id="founder-img-Dilip" src="https://stratmore.in/wp-content/uploads/2025/10/Dilip.png" data-name="Dilip" data-step="1" alt="Dilip Balakrishnan" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />
+                  <img id="founder-img-Dilip" src="team_images/Dilip.png" data-name="Dilip" alt="Dilip Balakrishnan" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />
                   <span class="absolute inset-0 flex items-center justify-center text-accent-400">DB</span>
                 </div>
                 <div>
@@ -798,9 +798,22 @@
 
     const sectionIds = ['home', 'services', 'leadership'];
     
-    const resolvedPhotoMap = {
-      Vikram: 'https://stratmore.in/wp-content/uploads/2025/10/Vikram.png',
-      Dilip: 'https://stratmore.in/wp-content/uploads/2025/10/Dilip.png'
+    const memberPhotoPaths = {
+      Vikram: 'team_images/Vikram.png',
+      Dilip: 'team_images/Dilip.png',
+      Sharanya: 'team_images/Sharanya.png',
+      Priyadarshini: 'team_images/Priyadarshini.png',
+      Tarun: 'team_images/Tarun.png',
+      Sandhya: 'team_images/Sandhya.png',
+      Shankaran: 'team_images/Shankaran.png',
+      Rakshitha: 'team_images/Rakshitha.jpeg',
+      Rashmi: 'team_images/Rashmi.jpeg',
+      Shamim: 'team_images/Shamim.png',
+      Preshti: 'team_images/Preshti.jpeg',
+      Komal: 'team_images/Komal.jpeg',
+      Chidanand: 'team_images/Chidanand.jpeg',
+      Mohan: 'team_images/Mohan.png',
+      Pooja: 'team_images/Pooja.png'
     };
 
     const teamMembers = [
@@ -809,181 +822,21 @@
       { name: 'Tarun', city: 'Bangalore', initials: 'TA', aliases: ['Tarun', 'Tharun'] },
       { name: 'Sandhya', city: 'Bangalore', initials: 'SA', aliases: ['Sandhya', 'Sandya'] },
       { name: 'Shankaran', city: 'Bangalore', initials: 'SK', aliases: ['Shankaran', 'Sankaran', 'Shankar'] },
-      { name: 'Rakshitha', city: 'Bangalore', initials: 'RA', preferLocal: true, aliases: ['Rakshitha', 'Rakshita'] },
-      { name: 'Rashmi', city: 'Bangalore', initials: 'RS', preferLocal: true, aliases: ['Rashmi'] },
+      { name: 'Rakshitha', city: 'Bangalore', initials: 'RA', aliases: ['Rakshitha', 'Rakshita'] },
+      { name: 'Rashmi', city: 'Bangalore', initials: 'RS', aliases: ['Rashmi'] },
       { name: 'Shamim', city: 'Mumbai', initials: 'SM', aliases: ['Shamim', 'Shameem'] },
-      { name: 'Preshti', city: 'Mumbai', initials: 'PR', preferLocal: true, aliases: ['Preshti', 'Prishti'] },
-      { name: 'Komal', city: 'Kolkata', initials: 'KO', preferLocal: true, aliases: ['Komal'] },
+      { name: 'Preshti', city: 'Mumbai', initials: 'PR', aliases: ['Preshti', 'Prishti'] },
+      { name: 'Komal', city: 'Kolkata', initials: 'KO', aliases: ['Komal'] },
       { name: 'Chidanand', city: 'Delhi', initials: 'CH', aliases: ['Chidanand', 'Chidananda'] },
-      { name: 'Mohan', city: 'Hyderabad', initials: 'MO', preferLocal: true, aliases: ['Mohan'] },
+      { name: 'Mohan', city: 'Hyderabad', initials: 'MO', aliases: ['Mohan'] },
       { name: 'Pooja', city: 'Dubai', initials: 'PO', aliases: ['Pooja', 'Puja'] }
     ];
 
     const cityNames = ['All', 'Bangalore', 'Mumbai', 'Kolkata', 'Delhi', 'Hyderabad', 'Dubai'];
     let currentTeamFilterIdx = 0;
 
-    function buildCandidateUrls(memberName) {
-      const memberObj = teamMembers.find(m => m.name === memberName);
-      if (memberObj && memberObj.noPhoto) return [];
-      if (resolvedPhotoMap[memberName]) {
-        return [resolvedPhotoMap[memberName]];
-      }
-      const namesToTry = memberObj && memberObj.aliases && memberObj.aliases.length > 0 ? memberObj.aliases : [memberName];
-      const exts = ['jpg', 'jpeg', 'png', 'webp', 'jfif', 'JPG', 'PNG', 'JPEG', 'WEBP'];
-      const urls = [];
-      namesToTry.forEach(n => {
-        const clean = n.trim();
-        const lower = clean.toLowerCase();
-        const upper = clean.toUpperCase();
-        exts.forEach(ext => {
-          urls.push(`${clean}.${ext}`);
-          urls.push(`${lower}.${ext}`);
-          urls.push(`${upper}.${ext}`);
-          urls.push(`images/${clean}.${ext}`);
-          urls.push(`images/${lower}.${ext}`);
-          urls.push(`assets/${clean}.${ext}`);
-          urls.push(`assets/${lower}.${ext}`);
-        });
-      });
-      const folders = ['2025/10', '2025/09', '2025/11', '2025/12', '2026/01', '2026/02', '2026/03', '2026/04', '2026/05', '2026/06', '2026/07', '2026/08', '2026/09', '2026/10', '2026/11'];
-      const wpExts = ['png', 'jpg', 'jpeg', 'webp'];
-      if (!memberObj || !memberObj.preferLocal) {
-        namesToTry.forEach(n => {
-          const clean = n.trim();
-          const lower = clean.toLowerCase();
-          folders.forEach(f => {
-            wpExts.forEach(ext => {
-              urls.push(`https://stratmore.in/wp-content/uploads/${f}/${clean}.${ext}`);
-              urls.push(`https://stratmore.in/wp-content/uploads/${f}/${lower}.${ext}`);
-              urls.push(`https://stratmore.in/wp-content/uploads/${f}/${clean}-1.${ext}`);
-            });
-          });
-        });
-      }
-      return urls;
-    }
-
     function tryNextMemberPhoto(imgEl) {
-      const name = imgEl.getAttribute('data-name');
-      const memberObj = teamMembers.find(m => m.name === name);
-      if (memberObj && memberObj.noPhoto) {
-        imgEl.style.display = 'none';
-        return;
-      }
-      if (resolvedPhotoMap[name] && imgEl.src !== resolvedPhotoMap[name]) {
-        imgEl.src = resolvedPhotoMap[name];
-        imgEl.style.display = 'block';
-        return;
-      }
-      const candidates = buildCandidateUrls(name);
-      const step = parseInt(imgEl.getAttribute('data-step') || '0', 10);
-      if (step < candidates.length) {
-        imgEl.setAttribute('data-step', String(step + 1));
-        imgEl.src = candidates[step];
-      } else {
-        imgEl.style.display = 'none';
-      }
-    }
-
-    function applyDiscoveredPhotosToDom() {
-      Object.keys(resolvedPhotoMap).forEach(name => {
-        const memberObj = teamMembers.find(m => m.name === name);
-        if (memberObj && memberObj.noPhoto) return;
-        const url = resolvedPhotoMap[name];
-        const imgEls = document.querySelectorAll(`img[data-name='${name}']`);
-        imgEls.forEach(img => {
-          if (img.src !== url) {
-            img.src = url;
-            img.style.display = 'block';
-          }
-        });
-      });
-    }
-
-    function parseStratmoreHtmlForTeamPhotos(htmlStr) {
-      if (!htmlStr) return;
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlStr, 'text/html');
-      const allTextEls = Array.from(doc.querySelectorAll('h1,h2,h3,h4,h5,h6,p,span,div,strong,b,figcaption'));
-      const allPeople = teamMembers.filter(m => !m.noPhoto && !m.preferLocal).concat([
-        { name: 'Vikram', aliases: ['Vikram Sengupta', 'Vikram'] },
-        { name: 'Dilip', aliases: ['Dilip Balakrishnan', 'Dilip'] }
-      ]);
-      allPeople.forEach(person => {
-        const aliases = person.aliases || [person.name];
-        for (let i = 0; i < aliases.length; i++) {
-          const target = aliases[i].toLowerCase();
-          const matchingNodes = allTextEls.filter(el => {
-            const t = (el.textContent || '').trim().toLowerCase();
-            return t === target || t.indexOf(target + ' ') === 0;
-          });
-          for (let m = 0; m < matchingNodes.length; m++) {
-            let curr = matchingNodes[m];
-            for (let depth = 0; depth < 6; depth++) {
-              if (!curr) break;
-              const imgs = Array.from(curr.querySelectorAll('img')).filter(im => {
-                const s = (im.getAttribute('data-src') || im.getAttribute('data-lazy-src') || im.getAttribute('src') || '').toLowerCase();
-                return s && s.indexOf('logo') === -1 && s.indexOf('icon') === -1 && s.indexOf('svg') === -1 && s.indexOf('data:image') === -1;
-              });
-              if (imgs.length === 1) {
-                let foundUrl = imgs[0].getAttribute('data-src') || imgs[0].getAttribute('data-lazy-src') || imgs[0].getAttribute('src');
-                if (foundUrl) {
-                  if (foundUrl.indexOf('http') !== 0) {
-                    foundUrl = 'https://stratmore.in' + (foundUrl.indexOf('/') === 0 ? '' : '/') + foundUrl;
-                  }
-                  resolvedPhotoMap[person.name] = foundUrl;
-                  break;
-                }
-              }
-              curr = curr.parentElement;
-            }
-            if (resolvedPhotoMap[person.name]) break;
-          }
-          if (resolvedPhotoMap[person.name]) break;
-        }
-      });
-      applyDiscoveredPhotosToDom();
-    }
-
-    function autoDiscoverStratmorePhotos() {
-      fetch('https://stratmore.in/wp-json/wp/v2/media?per_page=100')
-        .then(r => r.ok ? r.json() : [])
-        .then(mediaList => {
-          if (!Array.isArray(mediaList)) return;
-          const allPeople = teamMembers.filter(m => !m.noPhoto && !m.preferLocal).concat([
-            { name: 'Vikram', aliases: ['Vikram', 'Vikram Sengupta'] },
-            { name: 'Dilip', aliases: ['Dilip', 'Dilip Balakrishnan'] }
-          ]);
-          mediaList.forEach(item => {
-            const src = item && item.source_url ? item.source_url : '';
-            const slug = item && item.slug ? item.slug.toLowerCase() : '';
-            const title = item && item.title && item.title.rendered ? item.title.rendered.toLowerCase() : '';
-            if (!src || src.toLowerCase().indexOf('logo') !== -1) return;
-            allPeople.forEach(person => {
-              const aliases = person.aliases || [person.name];
-              aliases.forEach(al => {
-                const alLow = al.toLowerCase();
-                if (slug === alLow || title === alLow || slug.indexOf(alLow) === 0 || title.indexOf(alLow) === 0 || src.toLowerCase().indexOf('/' + alLow + '.') !== -1 || src.toLowerCase().indexOf('/' + alLow + '-') !== -1) {
-                  resolvedPhotoMap[person.name] = src;
-                }
-              });
-            });
-          });
-          applyDiscoveredPhotosToDom();
-        })
-        .catch(() => {});
-
-      fetch('https://stratmore.in/wp-json/wp/v2/pages?per_page=50')
-        .then(r => r.ok ? r.json() : [])
-        .then(pages => {
-          if (!Array.isArray(pages)) return;
-          pages.forEach(p => {
-            if (p && p.content && p.content.rendered) {
-              parseStratmoreHtmlForTeamPhotos(p.content.rendered);
-            }
-          });
-        })
-        .catch(() => {});
+      imgEl.style.display = 'none';
     }
 
     function renderTeamMembers(cityIndex = 0) {
@@ -993,11 +846,8 @@
       const filtered = selectedCity === 'All' ? teamMembers : teamMembers.filter(m => m.city === selectedCity);
       
       grid.innerHTML = filtered.map((m, i) => {
-        const candidates = buildCandidateUrls(m.name);
-        const firstUrl = resolvedPhotoMap[m.name] || (m.preferLocal && candidates.length > 0 ? candidates[0] : `https://stratmore.in/wp-content/uploads/2025/10/${m.name}.png`);
-        const startStep = (m.preferLocal && candidates.length > 0 && !resolvedPhotoMap[m.name]) ? '1' : '0';
         const delayMs = i * 45;
-        const imgMarkup = m.noPhoto ? '' : `<img src="${firstUrl}" data-name="${m.name}" data-step="${startStep}" alt="${m.name} - ${m.city}" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />`;
+        const imgMarkup = `<img src="${memberPhotoPaths[m.name]}" data-name="${m.name}" alt="${m.name} - ${m.city}" class="w-full h-full object-cover object-top relative z-10" onerror="tryNextMemberPhoto(this)" />`;
         
         return `<div style="animation-delay: ${delayMs}ms" class="team-card-enter bg-coolbg-50 hover:bg-white rounded-md border border-coolbg-200 hover:border-accent-500 p-5 sm:p-6 transition-all duration-300 shadow-sm hover:shadow-lg group flex items-center gap-4">
           <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-deepnavy-900 border-2 border-accent-500/80 overflow-hidden flex items-center justify-center text-white font-editorial text-xl font-bold shrink-0 shadow">
@@ -1160,7 +1010,6 @@
 
     // Initialize application scripts
     renderTeamMembers(0);
-    autoDiscoverStratmorePhotos();
     setupListeners();
     
     setTimeout(function(){
